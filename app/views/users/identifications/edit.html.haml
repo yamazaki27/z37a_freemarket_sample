@@ -1,5 +1,12 @@
 = render 'shared/header'
 
+.bread_crumbs
+  %ul.bread
+    %li.bread
+    = link_to edit_identification_path do
+      - breadcrumb :identification
+      = breadcrumbs
+
 .wrapper
   %main.mypage.clearfix
     = render 'shared/sidebar'

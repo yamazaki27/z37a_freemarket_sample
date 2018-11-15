@@ -1,5 +1,12 @@
 = render 'shared/header'
 
+.bread_crumbs
+  %ul.bread
+    %li.bread
+    = link_to profiles_path do
+      - breadcrumb :profile
+      = breadcrumbs
+
 .wrapper
   %main.mypage.clearfix
     = render 'shared/sidebar'

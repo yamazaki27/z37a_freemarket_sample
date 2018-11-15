@@ -1,5 +1,13 @@
 = render 'shared/header'
 
+.bread_crumbs
+  %ul.bread
+    %li.bread
+    = link_to sell_path do
+      - breadcrumb :sell
+      = breadcrumbs
+
+
 .wrapper
   %main.mypage.clearfix
     = render 'shared/sidebar'

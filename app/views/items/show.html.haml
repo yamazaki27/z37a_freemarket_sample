@@ -1,6 +1,14 @@
 %body
   .defalt-container
     = render "shared/header"
+
+    .bread_crumbs
+      %ul.bread
+        %li.bread
+        = link_to items_path(@item) do
+          - breadcrumb :item, @item
+          = breadcrumbs
+
     %section.item-box-container.u-single-container
       %h1.item-name
         = @item.name
