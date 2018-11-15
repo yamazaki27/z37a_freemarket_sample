@@ -1,0 +1,152 @@
+%body
+  .defalt-container
+    = render "shared/header"
+    %section.item-box-container.u-single-container
+      %h1.item-name
+        = @item.name
+      .item-main-content.clearfix
+        .item-photo
+          .owl-carousel.owl-loaded.owl-drag
+            .owl-stage-outer
+              .owl-stage{style: "left: 0px; width: 1200px;"}
+                .owl-item.active{style: "width: 300px;"}
+                  .owl-item-inner.is-higher-width{"data-thumbnail-class-name": " is-higher-width"}
+                    = image_tag @images.first.image_url, class: "owl-lazy", alt: "#{@item.name}", "data-src": @images.first.image_url, style: "opacity: 1;"
+                - if @images.length == 2
+                  .owl-item{style: "width: 300px;"}
+                    .owl-item-inner.is-higher-width{"data-thumbnail-class-name": " is-higher-width"}
+                      = image_tag @images.second.image_url, class: "owl-lazy", alt: "#{@item.name}", "data-src": @images.second.image_url, style: "opacity: 1;"
+                - elsif @images.length == 3
+                  .owl-item{style: "width: 300px;"}
+                    .owl-item-inner.is-higher-width{"data-thumbnail-class-name": " is-higher-width"}
+                      = image_tag @images.second.image_url, class: "owl-lazy", alt: "#{@item.name}", "data-src": @images.second.image_url, style: "opacity: 1;"
+                  .owl-item{style: "width: 300px;"}
+                    .owl-item-inner.is-higher-width{"data-thumbnail-class-name": " is-higher-width"}
+                      = image_tag @images.third.image_url, class: "owl-lazy", alt: "#{@item.name}", "data-src": @images.third.image_url, style: "opacity: 1;"
+                - elsif @images.length == 4
+                  .owl-item{style: "width: 300px;"}
+                    .owl-item-inner.is-higher-width{"data-thumbnail-class-name": " is-higher-width"}
+                      = image_tag @images.second.image_url, class: "owl-lazy", alt: "#{@item.name}", "data-src": @images.second.image_url, style: "opacity: 1;"
+                  .owl-item{style: "width: 300px;"}
+                    .owl-item-inner.is-higher-width{"data-thumbnail-class-name": " is-higher-width"}
+                      = image_tag @images.third.image_url, class: "owl-lazy", alt: "#{@item.name}", "data-src": @images.third.image_url, style: "opacity: 1;"
+                  .owl-item{style: "width: 300px;"}
+                    .owl-item-inner.is-higher-width{"data-thumbnail-class-name": " is-higher-width"}
+                      = image_tag @images.fourth.image_url, class: "owl-lazy", alt: "#{@item.name}", "data-src": @images.fourth.image_url, style: "opacity: 1;"
+            .owl-nav.disabled
+              .owl-prev prev
+              .owl-next next
+            %ul.owl-dots.disabled
+              %li.owl-dot.active
+                = image_tag @images.first.image_url
+              - if @images.length == 2
+                %li.owl-dot
+                  = image_tag @images.second.image_url
+              - elsif @images.length == 3
+                %li.owl-dot
+                  = image_tag @images.second.image_url
+                %li.owl-dot
+                  = image_tag @images.third.image_url
+              - elsif @images.length == 4
+                %li.owl-dot
+                  = image_tag @images.second.image_url
+                %li.owl-dot
+                  = image_tag @images.third.image_url
+                %li.owl-dot
+                  = image_tag @images.fourth.image_url
+        %table.item-detail-table
+          %tbody
+            %tr
+              %th 出品者
+              %td
+                - if user_signed_in?
+                  = link_to "#{@item.user.nickname}", user_path(@item.user)
+                - else
+                  = link_to "#{@item.user.nickname}", user_path
+                %div
+                  .item-user-ratings
+                    %i.fas.fa-grin-beam
+                    %span 2
+                  .item-user-ratings
+                    %i.fas.fa-meh
+                    %span 0
+                  .item-user-ratings
+                    %i.fas.fa-frown
+                    %span 0
+            %tr
+              %th カテゴリー
+              %td
+                = link_to item_path(@item.category) do
+                  %div
+                    = "#{@item.category.name}"
+                = link_to item_path(@item.mitem) do
+                  .item-detail-table-sub-category
+                    = fa_icon 'angle-right'
+                    = "#{@item.mitem.name}"
+                = link_to item_path(@item.sitem) do
+                  .item-detail-table-sub-sub-category
+                    = fa_icon 'angle-right'
+                    = "#{@item.sitem.name}"
+            %tr
+              %th ブランド
+              %td
+                = link_to "#{@item.brand}", item_path(@item)
+            %tr
+              %th 商品の状態
+              %td
+                = @item.condition
+            %tr
+              %th 配送料の負担
+              %td
+                = @item.burden
+            %tr
+              %th 配送の方法
+              %td
+                = @item.shipping_method
+            %tr
+              %th 配送元地域
+              %td
+                = link_to "#{@item.from_prefecture}", item_path(@item.class.from_prefectures[@item.from_prefecture])
+            %tr
+              %th 発送日の目安
+              %td
+                = @item.shipping_days
+      .item-price-box.text-center
+        %span.item-price.bold ¥
+        %span.item-price.bold
+          = @item.price.to_s(:delimited)
+        %span.item-tax (税込)
+        %span.item-shipping-fee
+          - if @item.burden == 1
+            = "着払い"
+          - else
+            = "送料込み"
+      .item-description
+        %p.item-description-inner
+          = @item.content
+    .item-detail-message
+      .message-container
+        .message-content
+          %form.command-form{:action => "https://www.mercari.com/jp/comment/add/", :method => "POST"}
+            .message-submit.btn-default.btn-red
+              = link_to '商品の編集', item_path(@item)
+            %p.message-text-center or
+            .message-submit.btn-default.btn-gray
+              = link_to '出品を一旦停止する', item_path(@item)
+            .message-submit.btn-default.btn-gray
+              = link_to 'この商品を削除する', item_path(@item), method: :delete, data: {confirm: "確認\n削除すると二度と復活できません。\n削除する代わりに停止することもできます。\n\n本当に削除しますか？"}
+              -# 削除確認のメッセージは仮置き
+    .item-detail-message
+      .message-container
+        .message-content
+          %form.message-form{:action => "https://www.mercari.com/jp/comment/add/", :method => "POST"}
+            %input{:name => "__csrf_value", :type => "hidden", :value => "c43823ecab510029768ba6e18316a6c5ef7aff7a07bfceec51ba52a83163a496aadd9d165f415bb5be3ec4b1ec459829f5c3aea6ca6eee3b84cd16f89be1e020e"}/
+            %p 相手のことを考え丁寧なコメントを心がけましょう。不快な言葉遣いなどは利用制限や退会処分となることがあります。
+            %input{:name => "item_id", :type => "hidden", :value => "m81006698765"}/
+            %input{:name => "redirect_url_key", :type => "hidden", :value => "item_detail"}/
+            %textarea.textarea-default{:name => "body", :type => "text", :value => ""}
+            .message-submit.btn-default.btn-gray
+              = link_to 'コメントする', item_path(@item)
+
+
+    = render 'shared/footer-nosell'

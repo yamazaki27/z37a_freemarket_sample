@@ -1,5 +1,8 @@
 class ItemsController < ApplicationController
   before_action :move_to_index, except: [:index, :show]
+  before_action :ensure_item_user, only: [:edit, :destroy]
+  before_action :set_item, only: [:show, :edit, :destroy]
+  before_action :set_desc_images, only: [:show, :edit]
 
   def index
     @item_woman = Item.where(category_id: 1).where.not(brand: ["シャネル", "ルイヴィトン", "シュプリーム", "ナイキ"] ).order("created_at DESC").limit(4)
@@ -30,11 +33,17 @@ class ItemsController < ApplicationController
   end
 
   def show
-    @item = Item.find(params[:id])
-    @images = @item.images.order('created_at DESC')
     @user_items = Item.where(user_id: @item.id).order('created_at DESC').limit(6)
     @category_items = Item.where(category_id: @item.id).order('created_at DESC').limit(6)
     @brand_items = Item.where(brand: @item.brand).order('created_at DESC').limit(6)
+  end
+
+  def edit
+  end
+
+  def destroy
+    @item.destroy
+    redirect_to sell_path
   end
 
   def buy
@@ -43,6 +52,21 @@ class ItemsController < ApplicationController
   private
   def move_to_index
     redirect_to new_user_session_path unless user_signed_in?
+  end
+
+  def set_item
+    @item = Item.find(params[:id])
+  end
+
+  def set_desc_images
+    @images = @item.images.order('created_at DESC')
+  end
+
+  def ensure_item_user
+    @item = Item.find(params[:id])
+    if @item.user_id != current_user.id
+      redirect_to :root
+    end
   end
 
   def item_params

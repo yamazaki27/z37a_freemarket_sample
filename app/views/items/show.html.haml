@@ -76,14 +76,14 @@
             %tr
               %th カテゴリー
               %td
-                = link_to item_path(@item) do
+                = link_to item_path(@item.category) do
                   %div
                     = "#{@item.category.name}"
-                = link_to item_path(@item) do
+                = link_to item_path(@item.mitem) do
                   .item-detail-table-sub-category
                     = fa_icon 'angle-right'
                     = "#{@item.mitem.name}"
-                = link_to item_path(@item) do
+                = link_to item_path(@item.sitem) do
                   .item-detail-table-sub-sub-category
                     = fa_icon 'angle-right'
                     = "#{@item.sitem.name}"
@@ -106,7 +106,7 @@
             %tr
               %th 配送元地域
               %td
-                = link_to "#{@item.from_prefecture}", item_path(@item)
+                = link_to "#{@item.from_prefecture}", item_path(@item.class.from_prefectures[@item.from_prefecture])
             %tr
               %th 発送日の目安
               %td
@@ -117,7 +117,7 @@
           = converting_to_jpy(@item.price)
         %span.item-tax (税込)
         %span.item-shipping-fee
-          - if @item.shipping_method == 1
+          - if @item.burden == 1
             = "着払い"
           - else
             = "送料込み"
@@ -301,4 +301,4 @@
                         %span 2
                       %p.item-box-tax (税込)
 
-    = render 'shared/footer'
+    = render 'shared/footer-nosell'

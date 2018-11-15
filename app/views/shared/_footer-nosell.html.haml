@@ -101,12 +101,3 @@
       = image_tag 'logo-white.svg', alt: "mercari", width: 115, height: 33
   %p.footer-copyright
     %small © 2018 Mercari
-
-- if user_signed_in?
-  = link_to new_item_path, class: "footer-sell-btn" do
-    .footer-sell-btn__text 出品
-    = fa_icon 'camera'
-- else
-  = link_to new_user_session_path, class: "footer-sell-btn" do
-    .footer-sell-btn__text 出品
-    = fa_icon 'camera'
